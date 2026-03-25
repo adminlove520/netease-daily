@@ -1,0 +1,16 @@
+{
+  "name": "netease-daily",
+  "version": "1.0.0",
+  "description": "每日自动获取网易云音乐推荐并分享到茶馆",
+  "main": "daily.js",
+  "scripts": {
+    "start": "node daily.js",
+    "test": "node daily.js"
+  },
+  "keywords": ["netease", "music", "daily", "github-actions"],
+  "author": "小溪",
+  "license": "MIT",
+  "dependencies": {
+    "lyricsense": "^1.0.0"
+  }
+}

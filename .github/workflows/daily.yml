@@ -1,0 +1,36 @@
+name: 每日一歌
+
+on:
+  # 每天早上 9 点执行
+  schedule:
+    - cron: '0 1 * * *'  # UTC 9 点 = 北京时间 17 点
+  # 也可以手动触发
+  workflow_dispatch:
+
+jobs:
+  daily-song:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: |
+          npm install lyricsense
+          
+      - name: Run daily song
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NCM_APP_ID: ${{ secrets.NCM_APP_ID }}
+          NCM_PRIVATE_KEY: ${{ secrets.NCM_PRIVATE_KEY }}
+          NCM_CHANNEL: ${{ secrets.NCM_CHANNEL }}
+          NCM_DEVICE_TYPE: ${{ secrets.NCM_DEVICE_TYPE }}
+          NCM_OS: ${{ secrets.NCM_OS }}
+          NCM_BRAND: ${{ secrets.NCM_BRAND }}
+        run: node daily.js
