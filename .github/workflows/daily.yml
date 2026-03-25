@@ -15,22 +15,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          node-version: '20'
+          python-version: '3.10'
           
       - name: Install dependencies
         run: |
-          npm install lyricsense
+          pip install cryptography requests
           
       - name: Run daily song
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          NCM_APP_ID: ${{ secrets.NCM_APP_ID }}
-          NCM_PRIVATE_KEY: ${{ secrets.NCM_PRIVATE_KEY }}
-          NCM_CHANNEL: ${{ secrets.NCM_CHANNEL }}
-          NCM_DEVICE_TYPE: ${{ secrets.NCM_DEVICE_TYPE }}
-          NCM_OS: ${{ secrets.NCM_OS }}
-          NCM_BRAND: ${{ secrets.NCM_BRAND }}
-        run: node daily.js
+          NCM_COOKIE: ${{ secrets.NCM_COOKIE }}
+        run: |
+          # 写入 Cookie 文件
+          echo "$NCM_COOKIE" > secrets/netease_cookies.json
+          
+          # 运行获取每日推荐
+          python3 scripts/netease_client.py daily
