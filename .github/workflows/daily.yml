@@ -25,6 +25,8 @@ jobs:
           pip install cryptography requests
 
       - name: Run daily song
+        env:
+          NCM_COOKIE: ${{ secrets.NCM_COOKIE }}
         run: |
           # 确保 secrets 目录存在
           mkdir -p secrets
