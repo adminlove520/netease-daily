@@ -197,14 +197,34 @@ class NeteaseMusicClient:
         print("💾 登录状态已保存")
 
     def load_cookies(self):
-        """加载登录状态"""
+        """加载登录状态 - 优先读文件，环境变量有效则覆盖"""
+        # 方式1: 读取 repo 里的 cookie 文件
         try:
             with open(self.cookies_file, 'r') as f:
                 cookies = json.load(f)
-                self.session.cookies.update(cookies)
-                return True
+                if cookies and len(cookies) > 0:
+                    self.session.cookies.update(cookies)
         except (FileNotFoundError, json.JSONDecodeError):
-            return False
+            cookies = None
+
+        # 方式2: 环境变量有值则优先使用（覆盖文件）
+        env_cookie = os.environ.get('NCM_COOKIE', '')
+        if env_cookie and env_cookie.strip():
+            try:
+                env_cookies = json.loads(env_cookie)
+                if isinstance(env_cookies, dict) and env_cookies:
+                    self.session.cookies.clear()
+                    self.session.cookies.update(env_cookies)
+                    print("📝 使用环境变量中的 Cookie")
+                    # 写回文件保持一致
+                    os.makedirs(os.path.dirname(self.cookies_file), exist_ok=True)
+                    with open(self.cookies_file, 'w') as f:
+                        json.dump(env_cookies, f)
+                    return True
+            except json.JSONDecodeError:
+                pass
+
+        return cookies is not None and len(cookies) > 0
 
 def format_daily_songs(songs, date_str=None):
     """格式化日推歌曲"""
