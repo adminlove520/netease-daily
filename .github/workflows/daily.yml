@@ -29,8 +29,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           NCM_COOKIE: ${{ secrets.NCM_COOKIE }}
         run: |
-          # 写入 Cookie 文件
+          # 创建目录并写入 Cookie 文件
+          mkdir -p secrets
           echo "$NCM_COOKIE" > secrets/netease_cookies.json
-          
+
           # 运行获取每日推荐
           python3 scripts/netease_client.py daily
