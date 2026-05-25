@@ -84,7 +84,7 @@ class NeteaseMusicClient:
             'Content-Type': 'application/x-www-form-urlencoded'
         })
         self.crypto = NeteaseCrypto()
-        self.cookies_file = '/root/.openclaw/workspace/secrets/netease_cookies.json'
+        self.cookies_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'secrets', 'netease_cookies.json')
         
     def weapi_request(self, endpoint, params=None):
         """调用weapi接口"""
